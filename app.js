@@ -5,6 +5,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const pool = require('./models/db');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +30,15 @@ app.get('/', async (req, res) => {
     res.status(500).send('Error en la base de datos');
   }
 });
+
+// Rutas
+
+//Rutas de Usuarios
+app.use('/api', userRoutes);
+
+// Rutas de Autenticación
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
