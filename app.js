@@ -5,7 +5,6 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const pool = require('./models/db');
-const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,11 +33,16 @@ app.get('/', async (req, res) => {
 // Rutas
 
 //Rutas de Usuarios
+const userRoutes = require('./routes/userRoutes');
 app.use('/api', userRoutes);
 
 // Rutas de Autenticación
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
+
+// Rutas de Productos
+const productRoutes = require('./routes/productRoutes');
+app.use('/api', productRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {

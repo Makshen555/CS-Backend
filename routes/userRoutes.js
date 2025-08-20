@@ -2,7 +2,7 @@
 const express = require('express'); 
 const router = express.Router(); 
 const UserController = require('../controllers/userController'); 
-const isAuthenticated = require('../middlewares/authMiddleware');
+const { isAuthenticated, hasRole } = require('../middlewares/authMiddleware');
 
 // Crear usuario 
 router.post('/users', UserController.create);
