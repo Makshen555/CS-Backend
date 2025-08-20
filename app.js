@@ -4,6 +4,7 @@ const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const pool = require('./models/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,9 +21,13 @@ app.use(session({
     cookie: { maxAge: 60000 } // 1 minuto de inactividad
 }));
 
-// Ruta de prueba
-app.get('/', (req, res) => {
-    res.send('Backend funcionando!');
+app.get('/', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.send(`Conexión funcionando, hora actual: ${result.rows[0].now}`);
+  } catch (err) {
+    res.status(500).send('Error en la base de datos');
+  }
 });
 
 // Iniciar servidor
