@@ -13,16 +13,16 @@ async function crearSuperAdmin() {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(plainPassword, salt);
 
-        // 1. Obtener el id del rol 'admin'
+        // 1. Obtener el id del rol 'SuperAdmin'
         const roleResult = await pool.query(
             `SELECT id FROM roles WHERE name = $1 LIMIT 1`,
             ['SuperAdmin']
         );
 
         if (roleResult.rows.length === 0) {
-            console.error("No existe el rol 'admin' en la tabla roles. Crea ese rol primero.");
-            pool.end();
-            return;
+            console.error("No existe el rol 'SuperAdmin' en la tabla roles. Crea ese rol primero.");
+            await pool.end();
+            process.exit(1); // error
         }
 
         const roleId = roleResult.rows[0].id;
@@ -40,12 +40,15 @@ async function crearSuperAdmin() {
             console.log(`Superadmin creado: ${result.rows[0].username}`);
         } else {
             console.log('El superadmin ya existe.');
+            process.exit(0)
         }
 
-        pool.end();
+        await pool.end();
+        process.exit(0); // siempre cerramos el proceso de forma limpia
     } catch (err) {
         console.error('Error creando superadmin:', err);
-        pool.end();
+        await pool.end();
+        process.exit(1); // error
     }
 }
 
