@@ -4,11 +4,11 @@ const router = express.Router();
 const UserController = require('../controllers/userController'); 
 const { isAuthenticated, hasRole } = require('../middlewares/authMiddleware');
 
-// Crear usuario 
-router.post('/users', UserController.create);
+// Crear usuario
+router.post('/users', isAuthenticated, hasRole('SuperAdmin'), UserController.create);
 
-// Listar usuarios 
-router.get('/users', UserController.list); 
+// Listar usuarios
+router.get('/users', isAuthenticated, hasRole(['SuperAdmin', 'Auditor']), UserController.list);
 
 // Ruta protegida
 router.get('/profile', isAuthenticated, (req, res) => {
